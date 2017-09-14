@@ -1,0 +1,58 @@
+﻿@model UxtrataWeb.ModelView.StudentReportViewModel
+@{
+    ViewBag.Title = "Home Page";
+}
+
+<div class="jumbotron">
+    <div class="editor-label">
+        @Html.Label("Student")<br />
+    </div>
+
+    <div>
+        @Html.DropDownListFor(model => model.Student, new SelectList(Model.Students, "Value", "Text"), new { style = "width:350px", @id = "Student" })
+    </div>
+
+    <div class="editor-label">
+        @Html.Label("Student Report")<br />
+    </div>
+    <table class="table table-bordered" id="StudentTable">
+        <thead>
+            <tr><th>ID</th><th>Transaction Type</th><th>Course Name</th><th>From Account</th><th>To Acccount</th><th>Amount</th></tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $("#Student").change(function () {
+            $("#CourseTable > tbody").empty();
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GetTransactions")',
+                dataType: 'json',
+                data: { id: $("#Student").val() },
+
+                success: function (transactions) {
+                    $.each(transactions, function (i, transaction) {
+                        $("#StudentTable tbody").append('<tr><td>' + transaction.TransactionID + '</td><td>' + transaction.TransactionType + '</td><td>' + transaction.CourseName + '</td><td>' + transaction.CreditAccountCode + '</td><td>' + transaction.DebitAccountCode + '</td><td>' + transaction.Amount + '</td></tr>');
+                    });
+                },
+                error: function (ex) {
+                    alert(' transactions retrieving fail.' + ex);
+                }
+            });
+            return false;
+        })
+
+        $("#StudentTable tbody").on("click", "tr", function (event) {
+            $(this).addClass('selected').siblings().removeClass('selected');
+        });
+    });
+</script>

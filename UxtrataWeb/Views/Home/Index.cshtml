@@ -1,0 +1,116 @@
+﻿@model UxtrataWeb.ModelView.HomeViewModel
+@{
+    ViewBag.Title = "Home Page";
+}
+
+<div class="jumbotron">
+    <div class="editor-label">
+        @Html.Label("Student")<br />
+    </div>
+
+    <div>
+        @Html.DropDownListFor(model => model.Student, new SelectList(Model.Students, "Value", "Text"), new { style = "width:350px", @id = "Student" })
+    </div>
+
+    <div class="editor-label">
+        @Html.Label("Courses")<br />
+    </div>
+    <table class="table table-bordered" id="CourseTable">
+        <thead>
+            <tr><th>ID</th><th>Name</th><th>Owe</th><th>Total Cost</th></tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+
+    <div id="PaymentDiv">
+        @Html.Label("Payment")<br />
+
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.PaymentValue, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.PaymentValue, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.PaymentValue, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <input type="button"
+               id="Payment"
+               value="Make payment" />
+    </div>
+
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#PaymentDiv").hide();
+
+        $("#Student").change(function () {
+            $("#CourseTable > tbody").empty();
+            $("#PaymentDiv").hide();
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GetCourses")',
+                dataType: 'json',
+                data: { id: $("#Student").val() },
+
+                success: function (courses) {
+                    $.each(courses, function (i, course) {
+                        $("#CourseTable tbody").append('<tr><td>'+course.CourseSelectionID+'</td><td>'+course.CourseName+'</td><td>'+course.Balance+'</td><td>'+course.CourseCost+'</td></tr>');
+                    });
+                },
+                error: function (ex) {
+                    alert(' courses retrieving fail.' + ex);
+                }
+            });
+            return false;
+        })
+
+        $("#CourseTable tbody").on("click", "tr", function (event) {
+            $(this).addClass('selected').siblings().removeClass('selected');
+            $("#PaymentDiv").show();
+        });
+
+        $("#Payment").click(function (evt)
+        {
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("MakePayment")',
+                dataType: 'json',
+                data: { CourseSelectionID: $("#CourseTable tr.selected td:first").text(), Value: $("#PaymentValue").val() },
+
+                success: function (message) {
+                    alert(message);
+                    $("#PaymentValue").val("0");
+                    $("#PaymentDiv").hide();
+                    $("#CourseTable > tbody").empty();
+                    $("#PaymentDiv").hide();
+                    $.ajax({
+                        type: 'POST',
+                        url: '@Url.Action("GetCourses")',
+                        dataType: 'json',
+                        data: { id: $("#Student").val() },
+
+                        success: function (courses) {
+                            $.each(courses, function (i, course) {
+                                $("#CourseTable tbody").append('<tr><td>' + course.CourseSelectionID + '</td><td>' + course.CourseName + '</td><td>' + course.Balance + '</td><td>' + course.CourseCost + '</td></tr>');
+                            });
+                        },
+                        error: function (ex) {
+                            alert(' courses retrieving fail.' + ex);
+                        }
+                    });
+                    return false;
+                },
+                error: function (ex) {
+                    alert(' payment process failed' + ex);
+                }
+            });
+        })
+    });
+</script>
