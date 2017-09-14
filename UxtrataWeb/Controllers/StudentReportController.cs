@@ -1,8 +1,11 @@
-﻿using System;
+﻿using Microsoft.Reporting.WebForms;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using UxtrataWeb.Business;
 using UxtrataWeb.Models;
 using UxtrataWeb.ModelView;
 using UxtrataWeb.Util;
@@ -12,6 +15,7 @@ namespace UxtrataWeb.Controllers
     public class StudentReportController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
+        private ReportBusiness business;
 
         // GET: StudentReport
         public ActionResult Index()
@@ -30,58 +34,59 @@ namespace UxtrataWeb.Controllers
             return View(model);
         }
 
+        public ActionResult Report(string id, int studentId)
+        {
+            business = new ReportBusiness();
+            LocalReport lr = new LocalReport();
+            string path = Path.Combine(Server.MapPath("~/Reports"), "StudentReport.rdlc");
+            if (System.IO.File.Exists(path))
+            {
+                lr.ReportPath = path;
+            }
+            else
+            {
+                return View("Index");
+            }
+            ReportDataSource rd = new ReportDataSource("studentReportDataSet", business.getReport(studentId));
+            lr.DataSources.Add(rd);
+            string reportType = id;
+            string mimeType;
+            string encoding;
+            string fileNameExtension;
+
+
+
+            string deviceInfo =
+
+            "<DeviceInfo>" +
+            "  <OutputFormat>" + id + "</OutputFormat>" +
+            "  <PageWidth>8.5in</PageWidth>" +
+            "  <PageHeight>11in</PageHeight>" +
+            "  <MarginTop>0.5in</MarginTop>" +
+            "  <MarginLeft>1in</MarginLeft>" +
+            "  <MarginRight>1in</MarginRight>" +
+            "  <MarginBottom>0.5in</MarginBottom>" +
+            "</DeviceInfo>";
+
+            Warning[] warnings;
+            string[] streams;
+            byte[] renderedBytes;
+
+            renderedBytes = lr.Render(
+                reportType,
+                deviceInfo,
+                out mimeType,
+                out encoding,
+                out fileNameExtension,
+                out streams,
+                out warnings);
+            return File(renderedBytes, mimeType);
+        }
+
         public JsonResult GetTransactions(int id)
         {
-            //Add enroll student transactions
-            List<TransactionDTO> transactions = (from s in db.Student
-                                                 join cs in db.CourseSelection on s.StudentID equals cs.StudentID
-                                                 join c in db.Course on cs.CourseID equals c.CourseID
-                                                 join t in db.Transaction on cs.ID equals t.BusinessID
-                                                 join bt in db.BusinessType on t.BusinessTypeID equals bt.BusinessTypeID
-                                                 join da in db.Account on t.DebitAccountID equals da.AccountID
-                                                 join ca in db.Account on t.CreditAccountID equals ca.AccountID
-                                                where s.StudentID == id && bt.Name == Constants.BusinessType.Enroll_Student.ToString()
-                                                select new TransactionDTO
-                                                 {
-                                                     TransactionID = t.TransactionID,
-                                                     TransactionType = bt.Name,
-                                                     CourseName = c.CourseName,
-                                                     DebitAccountCode = da.Code,
-                                                     CreditAccountCode = ca.Code,
-                                                     Amount = t.Amount
-                                                 }).ToList();
-            //Add deposit transactions
-            transactions.AddRange((from s in db.Student
-                                   join a in db.Account on s.AccountID equals a.AccountID
-                                   join t in db.Transaction on a.AccountID equals t.DebitAccountID
-                                   join bt in db.BusinessType on t.BusinessTypeID equals bt.BusinessTypeID
-                                   where s.StudentID == id && bt.Name == Constants.BusinessType.Deposit.ToString()
-                                   select new TransactionDTO
-                                   {
-                                       TransactionID = t.TransactionID,
-                                       TransactionType = bt.Name,
-                                       CourseName = "N/A",
-                                       DebitAccountCode = a.Code,
-                                       CreditAccountCode = "N/A",
-                                       Amount = t.Amount
-                                   }).ToList());
-            //Add withdraw transactions
-            transactions.AddRange((from s in db.Student
-                                   join a in db.Account on s.AccountID equals a.AccountID
-                                   join t in db.Transaction on a.AccountID equals t.CreditAccountID
-                                   join bt in db.BusinessType on t.BusinessTypeID equals bt.BusinessTypeID
-                                   where s.StudentID == id && bt.Name == Constants.BusinessType.Withdraw.ToString()
-                                   select new TransactionDTO
-                                   {
-                                       TransactionID = t.TransactionID,
-                                       TransactionType = bt.Name,
-                                       CourseName = "N/A",
-                                       DebitAccountCode = "N/A",
-                                       CreditAccountCode = a.Code,
-                                       Amount = t.Amount
-                                   }).ToList());
-            transactions = transactions.OrderBy(t => t.TransactionID).ToList();
-            return Json(transactions, JsonRequestBehavior.AllowGet);
+            business = new ReportBusiness();
+            return Json(business.getReport(id), JsonRequestBehavior.AllowGet);
         }
 
         private UxtrataWeb.ModelView.SelectListItem empty()
