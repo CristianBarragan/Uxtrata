@@ -1,0 +1,87 @@
+﻿@model UxtrataWeb.ModelView.CourseReportViewModel
+@{
+    ViewBag.Title = "Home Page";
+}
+
+<div class="jumbotron">
+    <div class="editor-label">
+        @Html.Label("Course")<br />
+    </div>
+
+    <div>
+        @Html.DropDownListFor(model => model.Course, new SelectList(Model.Courses, "Value", "Text"), new { style = "width:350px", @id = "Courses" })
+    </div>
+
+    <table class="table table-bordered" id="CourseTable">
+        <thead>
+            <tr><th>ID</th><th>Transaction Type</th><th>Course Name</th><th>From Account</th><th>To Acccount</th><th>Amount</th></tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+    
+    @*<div style="padding:10px; border:1px solid black">
+        <div><a href="@Url.Action("Report", new { formatId = "PDF", studentId = 10 })"> Get Report PDF</a></div>
+        <div><a href="@Url.Action("Report", new { formatId = "Excel", studentId = 10 })"> Get Report Excel</a></div>
+        <div><a href="@Url.Action("Report", new { formatId = "Word", studentId = 10 })"> Get Report Word</a></div>
+        <div><a href="@Url.Action("Report", new { formatId = "Image", studentId = 10 })"> Get Report Image</a></div>
+    </div>
+
+    <iframe src="~/ReportViewer.aspx" width="100%" height="200px" id="iframe1" marginheight="0" frameborder="0" onload="autoResize('iframe1');"></iframe>﻿*@
+
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+
+<style type="text/css">
+    #overlay {
+        display: none;
+    }
+</style>
+<script language="JavaScript">
+
+    function autoResize(id) {
+        var newheight;
+        var newwidth;
+
+        if (document.getElementById) {
+            newheight = document.getElementById(id).contentWindow.document.body.scrollHeight;
+            newwidth = document.getElementById(id).contentWindow.document.body.scrollWidth;
+        }
+
+        document.getElementById(id).height = (newheight) + "px";
+        document.getElementById(id).width = (newwidth) + "px";
+    }
+</script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $("#Courses").change(function () {
+
+            $("#Course").val($("#Courses").val());
+            $("#CourseTable > tbody").empty();
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GetTransactions")',
+                dataType: 'json',
+                data: { id: $("#Courses").val() },
+
+                success: function (transactions) {
+                    $.each(transactions, function (i, transaction) {
+                        $("#CourseTable tbody").append('<tr><td>' + transaction.TransactionID + '</td><td>' + transaction.TransactionType + '</td><td>' + transaction.CourseName + '</td><td>' + transaction.CreditAccountCode + '</td><td>' + transaction.DebitAccountCode + '</td><td>' + transaction.Amount + '</td></tr>');
+                    });
+                },
+                error: function (ex) {
+                    alert(' transactions retrieving fail.' + ex);
+                }
+            });
+            return false;
+        })
+
+        $("#CourseTable tbody").on("click", "tr", function (event) {
+            $(this).addClass('selected').siblings().removeClass('selected');
+        });
+    });
+</script>

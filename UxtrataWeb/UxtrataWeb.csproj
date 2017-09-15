@@ -185,6 +185,7 @@
     <Compile Include="Business\ReportBusiness.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\AccountsController.cs" />
+    <Compile Include="Controllers\CourseReportController.cs" />
     <Compile Include="Controllers\CoursesController.cs" />
     <Compile Include="Controllers\CourseSelectionsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -260,6 +261,7 @@
       <DependentUpon>studentReportDataSet.xsd</DependentUpon>
     </Compile>
     <Compile Include="Util\Constants.cs" />
+    <Compile Include="ViewModel\CourseReportViewModel.cs" />
     <Compile Include="ViewModel\TransactionDTO.cs" />
     <Compile Include="ViewModel\CourseDTO.cs" />
     <Compile Include="ViewModel\HomeViewModel.cs" />
@@ -370,6 +372,7 @@
     <Content Include="studentReportDataSet.xss">
       <DependentUpon>studentReportDataSet.xsd</DependentUpon>
     </Content>
+    <Content Include="Views\CourseReport\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

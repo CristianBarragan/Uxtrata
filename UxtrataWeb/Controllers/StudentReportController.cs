@@ -27,7 +27,7 @@ namespace UxtrataWeb.Controllers
                 Value = s.StudentID.ToString(),
             }).ToList();
             studentList.Insert(0, empty());
-            StudentReportViewModel model = new StudentReportViewModel
+            CourseReportViewModel model = new CourseReportViewModel
             {
                 Students = studentList,
             };
@@ -47,8 +47,8 @@ namespace UxtrataWeb.Controllers
             {
                 return View("Index");
             }
-            ReportDataSource rd = new ReportDataSource("studentReportDataSet", business.getReport(studentId));
-            lr.DataSources.Add(rd);
+            //ReportDataSource rd = new ReportDataSource("studentReportDataSet", business.getReportStudents(studentId));
+            //lr.DataSources.Add(rd);
             string reportType = id;
             string mimeType;
             string encoding;
@@ -86,7 +86,7 @@ namespace UxtrataWeb.Controllers
         public JsonResult GetTransactions(int id)
         {
             business = new ReportBusiness();
-            return Json(business.getReport(id), JsonRequestBehavior.AllowGet);
+            return Json(business.getReportStudents(id), JsonRequestBehavior.AllowGet);
         }
 
         private UxtrataWeb.ModelView.SelectListItem empty()

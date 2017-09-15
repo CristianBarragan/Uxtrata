@@ -5,7 +5,7 @@ using System.Web;
 
 namespace UxtrataWeb.ModelView
 {
-    public partial class StudentReportViewModel
+    public partial class CourseReportViewModel
     {
         public IEnumerable<SelectListItem> Students { get; set; }
         public string Student { get; set; }

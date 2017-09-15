@@ -9,13 +9,13 @@
               <Width>2.5cm</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>2.5cm</Width>
+              <Width>2.87042cm</Width>
             </TablixColumn>
             <TablixColumn>
               <Width>2.5cm</Width>
             </TablixColumn>
             <TablixColumn>
-              <Width>2.5cm</Width>
+              <Width>2.87042cm</Width>
             </TablixColumn>
             <TablixColumn>
               <Width>2.5cm</Width>
@@ -445,7 +445,7 @@
         <Top>1.90182cm</Top>
         <Left>1.53141cm</Left>
         <Height>1.2cm</Height>
-        <Width>15cm</Width>
+        <Width>15.74083cm</Width>
         <Style>
           <Border>
             <Style>None</Style>
