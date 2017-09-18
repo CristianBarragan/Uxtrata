@@ -417,8 +417,8 @@
     <EmbeddedResource Include="Migrations\201709141138330_storedProcedures.resx">
       <DependentUpon>201709141138330_storedProcedures.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Reports\CourseReport.rdlc" />
     <EmbeddedResource Include="Reports\StudentReport.rdlc" />
-    <EmbeddedResource Include="Reports\StudentReportOld.rdlc" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

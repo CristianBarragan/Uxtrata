@@ -19,15 +19,12 @@
         <tbody></tbody>
     </table>
     
-    @*<div style="padding:10px; border:1px solid black">
-        <div><a href="@Url.Action("Report", new { formatId = "PDF", studentId = 10 })"> Get Report PDF</a></div>
-        <div><a href="@Url.Action("Report", new { formatId = "Excel", studentId = 10 })"> Get Report Excel</a></div>
-        <div><a href="@Url.Action("Report", new { formatId = "Word", studentId = 10 })"> Get Report Word</a></div>
-        <div><a href="@Url.Action("Report", new { formatId = "Image", studentId = 10 })"> Get Report Image</a></div>
+    <div style="padding:10px; border:1px solid black">
+        <div><a id="pdfLink" href="@Url.Action()"> Get Report PDF</a></div>
+        <div><a id="excelLink" href="@Url.Action()"> Get Report Excel</a></div>
+        <div><a id="wordLink" href="@Url.Action()"> Get Report Word</a></div>
+        <div><a id="imageLink" href="@Url.Action()"> Get Report Image</a></div>
     </div>
-
-    <iframe src="~/ReportViewer.aspx" width="100%" height="200px" id="iframe1" marginheight="0" frameborder="0" onload="autoResize('iframe1');"></iframe>﻿*@
-
 </div>
 
 @section Scripts {
@@ -36,6 +33,90 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
+
+        $("#pdfLink").click(function () {
+            if ($('#Courses').val() !== "0") {
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("Report")?formatId=PDF&courseId=' + $("#Courses").val(),
+                    async: true,
+                    dataType: 'json',
+                    cache: false,
+                    statusCode: {
+                        400: function () {
+                            alert("Sorry! We cannot process you request");
+                        },
+                        200: function () {
+                            window.location = '@Url.Action("Report")';
+                        }
+                    }
+                });
+                return false;
+            }
+        })
+
+        $("#excelLink").click(function () {
+            if ($('#Courses').val() !== "0") {
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("Report")?formatId=Excel&courseId=' + $("#Courses").val(),
+                    async: true,
+                    dataType: 'json',
+                    cache: false,
+                    statusCode: {
+                        400: function () {
+                            alert("Sorry! We cannot process you request");
+                        },
+                        200: function () {
+                            window.location = '@Url.Action("Report")';
+                        }
+                    }
+                });
+                return false;
+            }
+        })
+
+        $("#wordLink").click(function () {
+            if ($('#Courses').val() !== "0") {
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("Report")?formatId=Word&courseId=' + $("#Courses").val(),
+                    async: true,
+                    dataType: 'json',
+                    cache: false,
+                    statusCode: {
+                        400: function () {
+                            alert("Sorry! We cannot process you request");
+                        },
+                        200: function () {
+                            window.location = '@Url.Action("Report")';
+                        }
+                    }
+                });
+                return false;
+            }
+        })
+
+        $("#imageLink").click(function () {
+            if ($('#Courses').val() !== "0") {
+                $.ajax({
+                    type: 'POST',
+                    url: '@Url.Action("Report")?formatId=Image&courseId=' + $("#Courses").val(),
+                    async: true,
+                    dataType: 'json',
+                    cache: false,
+                    statusCode: {
+                        400: function () {
+                            alert("Sorry! We cannot process you request");
+                        },
+                        200: function () {
+                            window.location = '@Url.Action("Report")';
+                        }
+                    }
+                });
+                return false;
+            }
+        })
 
         $("#Courses").change(function () {
 
