@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using UxtrataWeb.Business;
@@ -27,14 +28,21 @@ namespace UxtrataWeb.Controllers
                 Value = s.StudentID.ToString(),
             }).ToList();
             studentList.Insert(0, empty());
-            CourseReportViewModel model = new CourseReportViewModel
+            StudentReportViewModel model = new StudentReportViewModel
             {
                 Students = studentList,
             };
             return View(model);
         }
 
-        public ActionResult Report(string id, int studentId)
+        [HttpGet]
+        public FileContentResult Report()
+        {
+            return (FileContentResult)Session["FileResult"];
+        }
+
+        [HttpPost]
+        public HttpStatusCodeResult Report(string formatId, int studentId)
         {
             business = new ReportBusiness();
             LocalReport lr = new LocalReport();
@@ -45,11 +53,11 @@ namespace UxtrataWeb.Controllers
             }
             else
             {
-                return View("Index");
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            //ReportDataSource rd = new ReportDataSource("studentReportDataSet", business.getReportStudents(studentId));
-            //lr.DataSources.Add(rd);
-            string reportType = id;
+            ReportDataSource rd = new ReportDataSource("studentReportDataSet", business.getReportStudents(studentId));
+            lr.DataSources.Add(rd);
+            string reportType = formatId;
             string mimeType;
             string encoding;
             string fileNameExtension;
@@ -59,7 +67,7 @@ namespace UxtrataWeb.Controllers
             string deviceInfo =
 
             "<DeviceInfo>" +
-            "  <OutputFormat>" + id + "</OutputFormat>" +
+            "  <OutputFormat>" + formatId + "</OutputFormat>" +
             "  <PageWidth>8.5in</PageWidth>" +
             "  <PageHeight>11in</PageHeight>" +
             "  <MarginTop>0.5in</MarginTop>" +
@@ -80,7 +88,8 @@ namespace UxtrataWeb.Controllers
                 out fileNameExtension,
                 out streams,
                 out warnings);
-            return File(renderedBytes, mimeType);
+            Session["FileResult"] = File(renderedBytes, mimeType);
+            return new HttpStatusCodeResult(HttpStatusCode.OK);
         }
 
         public JsonResult GetTransactions(int id)
