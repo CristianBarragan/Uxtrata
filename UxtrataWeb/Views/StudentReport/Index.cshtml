@@ -25,9 +25,6 @@
         <div><a id="wordLink" href="@Url.Action()"> Get Report Word</a></div>
         <div><a id="imageLink" href="@Url.Action()"> Get Report Image</a></div>
     </div>
-
-    <iframe src="" width="100" height="200" id="iframe1" marginheight="0" frameborder="0"></iframe>﻿
-
 </div>
 
 @section Scripts {
@@ -39,21 +36,6 @@
         display: none;
     }
 </style>
-<script language="text/JavaScript">
-
-    function autoResize(id) {
-        var newheight;
-        var newwidth;
-
-        if (document.getElementById) {
-            newheight = document.getElementById(id).contentWindow.document.body.scrollHeight;
-            newwidth = document.getElementById(id).contentWindow.document.body.scrollWidth;
-        }
-
-        document.getElementById(id).height = (newheight) + "px";
-        document.getElementById(id).width = (newwidth) + "px";
-    }
-</script>
 
 <script type="text/javascript">
     $(document).ready(function () {

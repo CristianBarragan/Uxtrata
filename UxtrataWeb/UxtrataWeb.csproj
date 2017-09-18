@@ -190,7 +190,6 @@
     <Compile Include="Controllers\CourseSelectionsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
-    <Compile Include="Controllers\ReportController.cs" />
     <Compile Include="Controllers\StudentReportController.cs" />
     <Compile Include="Controllers\StudentsController.cs" />
     <Compile Include="DecimalModelBinder.cs" />
