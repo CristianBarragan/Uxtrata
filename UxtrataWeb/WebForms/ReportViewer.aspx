@@ -12,11 +12,19 @@
         {
             if(!IsPostBack)
             {
-                int studentId = 0;
-                studentId = Convert.ToInt32(Request.QueryString["StudentID"]);
+                int Id = 0;
                 List<UxtrataWeb.ModelView.TransactionDTO> trans = new List<UxtrataWeb.ModelView.TransactionDTO>();
                 UxtrataWeb.Business.ReportBusiness business = new UxtrataWeb.Business.ReportBusiness();
-                trans = business.getReportStudents(studentId);
+                if (Request.QueryString["studentID"] != null)
+                {
+                    Id = Convert.ToInt32(Request.QueryString["studentID"]);
+                    trans = business.getReportStudents(Id);
+                }
+                if (Request.QueryString["courseID"] != null)
+                {
+                    Id = Convert.ToInt32(Request.QueryString["courseID"]);
+                    trans = business.getReportCourses(Id);
+                }
                 ReportViewer1.LocalReport.ReportPath = Server.MapPath("~/Reports/StudentReport.rdlc");
                 ReportViewer1.LocalReport.DataSources.Clear();
                 ReportDataSource rdc = new ReportDataSource("studentReportDataSet", trans);
