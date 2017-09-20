@@ -92,6 +92,11 @@ namespace UxtrataWeb.Controllers
             return new HttpStatusCodeResult(HttpStatusCode.OK);
         }
 
+        public ActionResult ActionThatRetrieveAndAspx()
+        {
+            return View("Report"); //Aspx file Views/Products/WebForm1.aspx
+        }
+
         public JsonResult GetTransactions(int id)
         {
             business = new ReportBusiness();

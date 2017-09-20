@@ -5,7 +5,7 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
-namespace UxtrataWeb.Views.Shared
+namespace UxtrataWeb.WebForms
 {
     public partial class ReportViewer : System.Web.UI.Page
     {

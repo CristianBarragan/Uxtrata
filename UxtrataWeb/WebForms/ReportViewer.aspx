@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" CodeBehind="ReportViewer.aspx.cs" Inherits="UxtrataWeb.Views.Shared.ReportViewer" %>
+﻿<%@ Page Language="C#" CodeBehind="ReportViewer.aspx.cs" Inherits="UxtrataWeb.WebForms.ReportViewer" %>
 
 <%@ Register assembly="Microsoft.ReportViewer.WebForms, Version=11.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91" namespace="Microsoft.Reporting.WebForms" tagprefix="rsweb" %>
 
@@ -12,9 +12,11 @@
         {
             if(!IsPostBack)
             {
+                int studentId = 0;
+                studentId = Convert.ToInt32(Request.QueryString["StudentID"]);
                 List<UxtrataWeb.ModelView.TransactionDTO> trans = new List<UxtrataWeb.ModelView.TransactionDTO>();
                 UxtrataWeb.Business.ReportBusiness business = new UxtrataWeb.Business.ReportBusiness();
-                trans = business.getReport(10);
+                trans = business.getReportStudents(studentId);
                 ReportViewer1.LocalReport.ReportPath = Server.MapPath("~/Reports/StudentReport.rdlc");
                 ReportViewer1.LocalReport.DataSources.Clear();
                 ReportDataSource rdc = new ReportDataSource("studentReportDataSet", trans);

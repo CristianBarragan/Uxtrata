@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace UxtrataWeb.Views.Shared {
+namespace UxtrataWeb.WebForms {
     
     
     public partial class ReportViewer {

@@ -11,7 +11,7 @@
     <div>
         @Html.DropDownListFor(model => model.Student, new SelectList(Model.Students, "Value", "Text"), new { style = "width:350px", @id = "Students" })
     </div>
-
+    <iframe id="iframe" src="/WebForms/ReportViewer.aspx" width="1000" height="400"></iframe>
     <table class="table table-bordered" id="StudentTable">
         <thead>
             <tr><th>ID</th><th>Transaction Type</th><th>Course Name</th><th>From Account</th><th>To Acccount</th><th>Amount</th></tr>
@@ -139,6 +139,7 @@
                     $.each(transactions, function (i, transaction) {
                         $("#StudentTable tbody").append('<tr><td>' + transaction.TransactionID + '</td><td>' + transaction.TransactionType + '</td><td>' + transaction.CourseName + '</td><td>' + transaction.CreditAccountCode + '</td><td>' + transaction.DebitAccountCode + '</td><td>' + transaction.Amount + '</td></tr>');
                     });
+                    $("#iframe").attr("src", '/WebForms/ReportViewer.aspx?studentId=' + $("#Students").val());
                 },
                 error: function (ex) {
                     alert(' transactions retrieving fail.' + ex);
