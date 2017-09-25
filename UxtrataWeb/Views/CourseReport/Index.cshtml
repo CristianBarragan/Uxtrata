@@ -119,8 +119,6 @@
         })
 
         $("#Courses").change(function () {
-
-            $("#Course").val($("#Courses").val());
             $("#CourseTable > tbody").empty();
             $.ajax({
                 type: 'POST',

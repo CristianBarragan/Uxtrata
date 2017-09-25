@@ -120,8 +120,6 @@
         })
 
         $("#Students").change(function () {
-
-            $("#Student").val($("#Students").val());
             $("#StudentTable > tbody").empty();
             $.ajax({
                 type: 'POST',
