@@ -43,10 +43,9 @@ namespace UxtrataWeb.Controllers
         }
 
         [HttpPost]
-        public async Task<HttpStatusCodeResult> Report(string formatId, int studentId)
+        public HttpStatusCodeResult Report(string formatId, int studentId)
         {
-
-            return await Task.Run(() => generateReport(formatId, studentId));
+            return generateReport(formatId, studentId);
         }
 
         private HttpStatusCodeResult generateReport(string formatId, int studentId)
