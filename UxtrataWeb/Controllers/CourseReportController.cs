@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using UxtrataWeb.Business;
@@ -47,7 +48,12 @@ namespace UxtrataWeb.Controllers
         }
 
         [HttpPost]
-        public HttpStatusCodeResult Report(string formatId, int courseId)
+        public async Task<HttpStatusCodeResult> Report(string formatId, int courseId)
+        {
+            return await Task.Run(() => generateReport(formatId, courseId));
+        }
+
+        private HttpStatusCodeResult generateReport(string formatId, int courseId)
         {
             business = new ReportBusiness();
             LocalReport lr = new LocalReport();
@@ -66,8 +72,6 @@ namespace UxtrataWeb.Controllers
             string mimeType;
             string encoding;
             string fileNameExtension;
-
-
 
             string deviceInfo =
 

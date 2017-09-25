@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using UxtrataWeb.Business;
@@ -42,7 +43,13 @@ namespace UxtrataWeb.Controllers
         }
 
         [HttpPost]
-        public HttpStatusCodeResult Report(string formatId, int studentId)
+        public async Task<HttpStatusCodeResult> Report(string formatId, int studentId)
+        {
+
+            return await Task.Run(() => generateReport(formatId, studentId));
+        }
+
+        private HttpStatusCodeResult generateReport(string formatId, int studentId)
         {
             business = new ReportBusiness();
             LocalReport lr = new LocalReport();
@@ -61,8 +68,6 @@ namespace UxtrataWeb.Controllers
             string mimeType;
             string encoding;
             string fileNameExtension;
-
-
 
             string deviceInfo =
 
@@ -90,11 +95,6 @@ namespace UxtrataWeb.Controllers
                 out warnings);
             Session["FileResult"] = File(renderedBytes, mimeType);
             return new HttpStatusCodeResult(HttpStatusCode.OK);
-        }
-
-        public ActionResult ActionThatRetrieveAndAspx()
-        {
-            return View("Report"); //Aspx file Views/Products/WebForm1.aspx
         }
 
         public JsonResult GetTransactions(int id)
